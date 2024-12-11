@@ -1,0 +1,40 @@
+name: GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # main 브랜치에 푸시될 때마다 실행
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 저장소 체크아웃
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Ruby 환경 설정
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.0  # 필요한 Ruby 버전
+
+      # Bundler 설치 및 의존성 설치
+      - name: Install dependencies
+        run: |
+          gem install bundler
+          bundle install
+
+      # Jekyll 사이트 빌드
+      - name: Build the site with Jekyll
+        run: |
+          bundle exec jekyll build
+
+      # GitHub Pages에 배포
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages  # 배포할 브랜치 설정
+          folder: _site  # 빌드된 사이트가 위치한 디렉토리
+
